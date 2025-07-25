@@ -1,2 +1,42 @@
-node_modules
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
 .env
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Build / output
+dist/
+build/
+tmp/
+temp/
+
+# MongoDB dump files
+dump/
+*.local
+
+# Optional: PM2 logs
+pids/
+*.pid
+*.seed
+
+# Optional: Docker
+docker-compose.override.yml
+
+# Optional: Coverage reports
+coverage/
