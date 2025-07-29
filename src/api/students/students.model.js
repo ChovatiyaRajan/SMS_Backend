@@ -23,6 +23,11 @@ const studentScema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ["USER", "ADMIN", "SUPER_ADMIN"],
+    default: "USER",
+  },
 });
 
 studentScema.pre("save", async function (next) {

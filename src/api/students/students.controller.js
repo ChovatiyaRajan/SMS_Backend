@@ -45,8 +45,18 @@ export const login = async (req, res) => {
     if (!token)
       return res.status(404).json({ message: "You are unauthorized" });
 
-    return res.status(200).json({ message: "Login Successfull !", token });
+    return res.status(200).json({ message: "Login Successfull !", token, user });
   } catch (error) {
     res.status(500).json(error.message);
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.status(200).json({ message: "user found", user });
+  } catch (error) {
+    console.log(error.message);
   }
 };
