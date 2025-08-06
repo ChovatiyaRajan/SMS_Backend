@@ -11,8 +11,6 @@ export const authenticate = async (req, res, next) => {
 
     const user = await Users.findById({ _id: id });
 
-    console.log(user);
-
     req.user = user;
 
     next();

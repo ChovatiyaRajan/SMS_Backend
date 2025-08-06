@@ -2,12 +2,9 @@ import { Users } from "./students.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-console.log("first");
-
 export const register = async (req, res) => {
   try {
     const user = req.body;
-    console.log(user);
     if (!user) return res.status(404).json({ message: "user not found !" });
 
     await Users.create(user);
@@ -45,7 +42,9 @@ export const login = async (req, res) => {
     if (!token)
       return res.status(404).json({ message: "You are unauthorized" });
 
-    return res.status(200).json({ message: "Login Successfull !", token, user });
+    return res
+      .status(200)
+      .json({ message: "Login Successfull !", token, user });
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -57,6 +56,36 @@ export const getUser = async (req, res) => {
 
     res.status(200).json({ message: "user found", user });
   } catch (error) {
-    console.log(error.message);
+    res.status(500).json(error.message);
+  }
+};
+
+export const getUsers = async (req, res) => {
+  try {
+    const allUsers = await Users.find();
+
+    if (!allUsers) return res.status(404).json({ message: "No users found" });
+
+    res.status(200).json({ message: "All users found", allUsers });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+export const delUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(id, "+++++++++id========");
+
+    const deleteUser = await Users.findByIdAndDelete(id);
+
+    if (!deleteUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Use deleted successfully", deleteUser });
+  } catch (error) {
+    res.status(500).json(error.message);
   }
 };
