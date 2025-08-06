@@ -89,3 +89,28 @@ export const delUser = async (req, res) => {
     res.status(500).json(error.message);
   }
 };
+
+export const updateUser = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    const userData = req.body;
+
+    if (!userID || !userData) {
+      return res.status(404).json({ message: "User ID and data are required" });
+    }
+
+    const updatedUser = await Users.findByIdAndUpdate(userID, userData);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not Found !" });
+    }
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+    
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
