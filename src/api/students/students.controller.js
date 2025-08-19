@@ -65,6 +65,9 @@ export const getUsers = async (req, res) => {
     const selectedRole = req.query.selectedRole;
     const selectedGender = req.query.selectedGender;
     const searchUser = req.query.findUser;
+    const currentPage = req.query.currentPage;
+    const dataLimit = Number(req.query.dataLimit);
+    const pageToSkip = (currentPage - 1) * dataLimit;
 
     const query = {};
 
@@ -83,13 +86,19 @@ export const getUsers = async (req, res) => {
       ];
     }
 
-    const pipeline = [{ $match: query }];
+    const pipeline = [
+      { $match: query },
+      { $skip: Number(pageToSkip) },
+      { $limit: dataLimit },
+    ];
 
     const allUsers = await Users.aggregate(pipeline);
 
+    const count = await Users.countDocuments(query);
+
     if (!allUsers) return res.status(404).json({ message: "No users found" });
 
-    res.status(200).json({ message: "All users found", allUsers });
+    res.status(200).json({ message: "All users found", allUsers, count });
   } catch (error) {
     res.status(500).json(error.message);
   }
