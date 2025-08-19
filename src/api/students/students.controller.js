@@ -64,6 +64,7 @@ export const getUsers = async (req, res) => {
   try {
     const selectedRole = req.query.selectedRole;
     const selectedGender = req.query.selectedGender;
+    const searchUser = req.query.findUser;
 
     const query = {};
 
@@ -73,6 +74,13 @@ export const getUsers = async (req, res) => {
 
     if (selectedGender) {
       query.gender = selectedGender;
+    }
+
+    if (searchUser) {
+      query.$or = [
+        { name: { $regex: searchUser, $options: "i" } },
+        { email: { $regex: searchUser, $options: "i" } },
+      ];
     }
 
     const pipeline = [{ $match: query }];
@@ -90,8 +98,6 @@ export const getUsers = async (req, res) => {
 export const delUser = async (req, res) => {
   try {
     const { id } = req.params;
-
-    console.log(id, "+++++++++id========");
 
     const deleteUser = await Users.findByIdAndDelete(id);
 
