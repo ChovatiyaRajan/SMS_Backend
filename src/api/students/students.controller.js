@@ -63,6 +63,7 @@ export const getUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const selectedRole = req.query.selectedRole;
+    const selectedGender = req.query.selectedGender;
 
     const query = {};
 
@@ -70,9 +71,11 @@ export const getUsers = async (req, res) => {
       query.role = selectedRole;
     }
 
-    const pipeline = [
-      {$match : query}
-    ]
+    if (selectedGender) {
+      query.gender = selectedGender;
+    }
+
+    const pipeline = [{ $match: query }];
 
     const allUsers = await Users.aggregate(pipeline);
 
