@@ -62,7 +62,19 @@ export const getUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const allUsers = await Users.find();
+    const selectedRole = req.query.selectedRole;
+
+    const query = {};
+
+    if (selectedRole) {
+      query.role = selectedRole;
+    }
+
+    const pipeline = [
+      {$match : query}
+    ]
+
+    const allUsers = await Users.aggregate(pipeline);
 
     if (!allUsers) return res.status(404).json({ message: "No users found" });
 
@@ -109,7 +121,6 @@ export const updateUser = async (req, res) => {
       message: "User updated successfully",
       user: updatedUser,
     });
-    
   } catch (error) {
     res.status(500).json(error.message);
   }
