@@ -23,6 +23,10 @@ const studentScema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+  },
   role: {
     type: String,
     enum: ["USER", "ADMIN", "SUPER_ADMIN"],

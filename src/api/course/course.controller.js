@@ -29,3 +29,38 @@ export const getCourses = async (req, res) => {
     });
   }
 };
+
+export const removeCourse = async (req, res) => {
+  try {
+    const { removeId } = req.params;
+
+    // console.log("id-", removeId);
+
+    const removeCourse = await Courses.findByIdAndDelete(removeId);
+
+    console.log(removeCourse);
+
+    res.status(200).json({ message: "Done ...." });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message || "Error while Removing course",
+    });
+  }
+};
+
+export const updateCourse = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const dataID = data.courseId;
+
+    const updateCourse = await Courses.findByIdAndUpdate(dataID, data);
+
+    res.status(200).json({ message: "Done ....", updateCourse });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message || "Error while Updateing course",
+    });
+  }
+};
+
