@@ -13,12 +13,8 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  courseStartingDate: {
-    type: Date,
-    required: true,
-  },
-  courseEndingDate: {
-    type: Date,
+  courseTimeline: {
+    type: String,
     required: true,
   },
   courseFee: {
@@ -27,4 +23,4 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
-export const Courses = mongoose.model("corses" , courseSchema)
+export const Courses = mongoose.model("corses", courseSchema);

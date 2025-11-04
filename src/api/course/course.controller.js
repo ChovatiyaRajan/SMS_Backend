@@ -4,6 +4,8 @@ export const addCourse = async (req, res) => {
   try {
     const getCourse = req.body;
 
+    console.log(getCourse);
+
     if (!getCourse) return res.status(404).json({ error: "corse not found" });
 
     await Courses.create(getCourse);
@@ -64,3 +66,18 @@ export const updateCourse = async (req, res) => {
   }
 };
 
+export const getCourseById = async (req, res) => {
+  try {
+    const course = await Courses.findById(req.params.id);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(200).json({ course });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message || "Error while Geeting course",
+    });
+  }
+};
