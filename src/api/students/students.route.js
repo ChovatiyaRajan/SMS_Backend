@@ -6,6 +6,7 @@ import {
   login,
   register,
   updateUser,
+  updateUserCourseId,
 } from "./students.controller.js";
 import { authenticate } from "../../middleware/authentication.js";
 
@@ -17,3 +18,4 @@ students.get("/get-user", authenticate, getUser);
 students.get("/get-users", authenticate, getUsers);
 students.delete("/del-user/:id", authenticate, delUser);
 students.put("/update-user/:id", authenticate, updateUser);
+students.put("/course-enroll/:id", authenticate, updateUserCourseId);

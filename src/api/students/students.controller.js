@@ -62,6 +62,8 @@ export const getUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
+    const ddd = await Users.find().populate("courseId");
+    console.log(ddd);
     const selectedRole = req.query.selectedRole;
     const selectedGender = req.query.selectedGender;
     const searchUser = req.query.findUser;
@@ -140,6 +142,39 @@ export const updateUser = async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+export const updateUserCourseId = async (req, res) => {
+  try {
+    const userID = req.params.id;
+    const courseID = req.body.courseId;
+
+    console.log(userID, "userID");
+
+    console.log(courseID, "courseID");
+
+    if (!userID || !courseID) {
+      return res
+        .status(404)
+        .json({ message: "User ID and courseID are required" });
+    }
+
+    const updatedUser = await Users.findByIdAndUpdate(userID, {
+      courseId: courseID,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not Found !" });
+    }
+
+    res.status(200).json({
+      message: "Course assigned to user successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error.message);
     res.status(500).json(error.message);
   }
 };
