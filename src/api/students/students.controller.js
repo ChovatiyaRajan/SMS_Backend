@@ -1,6 +1,8 @@
 import { Users } from "./students.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import { Courses } from "../course/course.model.js";
 
 export const register = async (req, res) => {
   try {
@@ -62,8 +64,8 @@ export const getUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    const ddd = await Users.find().populate("courseId");
-    console.log(ddd);
+    // const ddd = await Users.find().populate("courseId");
+    // console.log(ddd);
     const selectedRole = req.query.selectedRole;
     const selectedGender = req.query.selectedGender;
     const searchUser = req.query.findUser;
@@ -198,6 +200,45 @@ export const endUserCourse = async (req, res) => {
       message: "Course assigned to user successfully",
       user: updatedUser,
     });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json(error.message);
+  }
+};
+
+export const getActiveUsers = async (req, res) => {
+  try {
+    const { selectedCoures, selectedTimeline } = req.query;
+
+    // Base match query
+    const matchStage = selectedCoures
+      ? { courseId: new mongoose.Types.ObjectId(selectedCoures) }
+      : { courseId: { $ne: null } };
+
+    // Build pipeline
+    const pipeline = [
+      { $match: matchStage },
+      {
+        $lookup: {
+          from: "corses",
+          localField: "courseId",
+          foreignField: "_id",
+          as: "courseId",
+        },
+      },
+      { $unwind: "$courseId" },
+    ];
+
+    if (selectedTimeline) {
+      pipeline.push({
+        $match: { "courseId.courseTimeline": selectedTimeline },
+      });
+    }
+
+    // Execute aggregation
+    const activeUsers = await Users.aggregate(pipeline);
+
+    res.status(200).json({ message: "Active users found", activeUsers });
   } catch (error) {
     console.log(error.message);
     res.status(500).json(error.message);

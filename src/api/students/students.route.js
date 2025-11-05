@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   delUser,
   endUserCourse,
+  getActiveUsers,
   getUser,
   getUsers,
   login,
@@ -21,3 +22,4 @@ students.delete("/del-user/:id", authenticate, delUser);
 students.put("/update-user/:id", authenticate, updateUser);
 students.put("/course-enroll/:id", authenticate, updateUserCourseId);
 students.put("/course-end", authenticate, endUserCourse);
+students.get("/acive-users", authenticate, getActiveUsers);
