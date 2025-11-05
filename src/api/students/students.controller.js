@@ -26,7 +26,7 @@ export const login = async (req, res) => {
         .status(404)
         .json({ message: "Email and password are required " });
 
-    const user = await Users.findOne({ email });
+    const user = await Users.findOne({ email }).populate("courseId");
 
     if (!user) return res.status(404).json({ message: "Email not found ! " });
 
@@ -164,6 +164,31 @@ export const updateUserCourseId = async (req, res) => {
     const updatedUser = await Users.findByIdAndUpdate(userID, {
       courseId: courseID,
     });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not Found !" });
+    }
+
+    res.status(200).json({
+      message: "Course assigned to user successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json(error.message);
+  }
+};
+
+export const endUserCourse = async (req, res) => {
+  try {
+    const userID = req.user._id;
+
+    const updatedUser = await Users.findByIdAndUpdate(
+      userID,
+      { $unset: { courseId: "" } },
+      { new: true }
+      //for set null in courseId field
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not Found !" });

@@ -26,7 +26,6 @@ const studentScema = new mongoose.Schema({
   courseId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "corses",
-    default: null,
   },
   role: {
     type: String,
